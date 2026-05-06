@@ -1,0 +1,42 @@
+@model LeaveManagement.Data.LeaveType
+
+@{
+    ViewData["Title"] = "Edit Leave Type";
+}
+
+<h1 class="mb-4 text-primary">@ViewData["Title"]</h1>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-warning text-dark">
+        <h4 class="mb-0">Update Leave Type</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" placeholder="Enter leave type name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NumberOfDays" class="form-label"></label>
+                <input asp-for="NumberOfDays" class="form-control" placeholder="Enter number of days" />
+                <span asp-validation-for="NumberOfDays" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-secondary">⬅ Back to List</a>
+                <button type="submit" class="btn btn-success">💾 Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

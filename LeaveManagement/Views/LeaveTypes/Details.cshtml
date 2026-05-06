@@ -1,0 +1,34 @@
+@model LeaveManagement.Data.LeaveType
+
+@{
+    ViewData["Title"] = "Leave Type Details";
+}
+
+<h1 class="mb-4 text-info">@ViewData["Title"]</h1>
+
+<div class="card shadow-sm">
+    <div class="card-header bg-info text-white">
+        <h4 class="mb-0">Leave Type Information</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3 fw-bold">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+            <dt class="col-sm-3 fw-bold">
+                @Html.DisplayNameFor(model => model.NumberOfDays)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.NumberOfDays)
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+        <a asp-action="Index" class="btn btn-secondary">⬅ Back to List</a>
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">✏️ Edit</a>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+# Build results
+bin/
+obj/
+Debug/
+Release/
+
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# IIS / ASP.NET generated files
+App_Data/
+*.dbmdl
+
+# Configuration secrets (keep safe versions only)
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.json
+
+# Node / LibMan / client-side libraries
+node_modules/
+wwwroot/lib/
+
+# Other
+*.swp
