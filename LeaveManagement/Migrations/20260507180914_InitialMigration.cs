@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LeaveManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class AddingLeaveTypeTable : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,9 @@ namespace LeaveManagement.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    dateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -208,6 +211,63 @@ namespace LeaveManagement.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+
+            // Seed Roles
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "Name", "NormalizedName", "ConcurrencyStamp" },
+                values: new object[] { "f2bd4794-fd58-4fbf-a4d3-88be7818419b", "Administrator", "ADMINISTRATOR", Guid.NewGuid().ToString() }
+            );
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "Name", "NormalizedName", "ConcurrencyStamp" },
+                values: new object[] { "e3c6a1a2-1234-5678-9012-abcdefabcdef", "Employee", "EMPLOYEE", Guid.NewGuid().ToString() }
+            );
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "Name", "NormalizedName", "ConcurrencyStamp" },
+                values: new object[] { "b7d9c8f0-9876-5432-1098-fedcbaabcdef", "Supervisor", "SUPERVISOR", Guid.NewGuid().ToString() }
+            );
+
+            // Seed Admin User
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[]
+                {
+        "Id", "UserName", "FirstName", "LastName","dateOfBirth", "NormalizedUserName", "Email", "NormalizedEmail",
+        "EmailConfirmed", "PasswordHash", "SecurityStamp", "ConcurrencyStamp",
+        "PhoneNumberConfirmed", "TwoFactorEnabled", "LockoutEnabled", "AccessFailedCount"
+                },
+                values: new object[]
+                {
+        "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "admin@gmail.com",
+        "sai srujan",
+        "gundeti",
+        DateOnly.Parse("2001-04-19"),
+        "ADMIN@GMAIL.COM",
+        "admin@gmail.com",
+        "ADMIN@GMAIL.COM",
+        true,
+        "AQAAAAIAAYagAAAAEIeziMu6FDgqfXoaoWJPybrIRKTHhdjYdHB5jC12ZFFwMCHDa+NhMQkmafD01v6pgg==", // precomputed hash
+        Guid.NewGuid().ToString(),   // SecurityStamp
+        Guid.NewGuid().ToString(),   // ConcurrencyStamp
+        false,                       // PhoneNumberConfirmed
+        false,                       // TwoFactorEnabled
+        false,                       // LockoutEnabled
+        0                            // AccessFailedCount
+                }
+            );
+
+            // Link Admin User to Administrator Role
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "UserId", "RoleId" },
+                values: new object[] { "a1b2c3d4-e5f6-7890-abcd-ef1234567890", "f2bd4794-fd58-4fbf-a4d3-88be7818419b" }
+            );
         }
 
         /// <inheritdoc />
