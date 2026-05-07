@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using LeaveManagement.Data;
+using LeaveManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+
+builder.Services.AddScoped<ILeaveTypeService, LeaveTypesService>();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();

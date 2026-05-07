@@ -7,31 +7,26 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LeaveManagement.Data;
 using LeaveManagement.Models.LeaveTypes;
+using LeaveManagement.Services;
 
 namespace LeaveManagement.Controllers
 {
     public class LeaveTypesController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public LeaveTypesController(ApplicationDbContext context)
+        private readonly ILeaveTypeService _leaveTypeService;
+        public LeaveTypesController(ApplicationDbContext context, ILeaveTypeService leaveTypeService)
         {
             _context = context;
+            _leaveTypeService = leaveTypeService;
         }
 
         // GET: LeaveTypes
         public async Task<IActionResult> Index()
         {
-            var leaveTypes = await _context.LeaveTypes
-                .Select(q => new Models.LeaveTypes.LeaveTypeViewModel
-                {
-                    Id = q.Id,
-                    Name = q.Name,
-                    NumberOfDays = q.NumberOfDays
-                }).ToListAsync();
-            return View(
-                leaveTypes
-    );
+            var leaveTypes = await _leaveTypeService.GetAllLeaveTypes();
+
+            return View(leaveTypes);
         }
 
         // GET: LeaveTypes/Details/5
@@ -42,20 +37,12 @@ namespace LeaveManagement.Controllers
                 return NotFound();
             }
 
-            var leaveType = await _context.LeaveTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (leaveType == null)
+            var model = await _leaveTypeService.GetDetailsById(id);
+
+            if (model == null)
             {
                 return NotFound();
             }
-
-            var model = new LeaveTypeViewModel
-            {
-                Id = leaveType.Id,
-                Name = leaveType.Name,
-                NumberOfDays = leaveType.NumberOfDays
-            };
-
             return View(model);
         }
 
@@ -87,14 +74,7 @@ namespace LeaveManagement.Controllers
 
             if (ModelState.IsValid)
             {
-
-                var leaveType = new LeaveType
-                {
-                    Name = createleaveType.Name,
-                    NumberOfDays = createleaveType.NumberOfDays
-                };
-                _context.Add(leaveType);
-                await _context.SaveChangesAsync();
+                await _leaveTypeService.Create(createleaveType);
                 return RedirectToAction(nameof(Index));
             }
             return View(createleaveType);
@@ -131,6 +111,11 @@ namespace LeaveManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, EditLeaveTypeViewModel editLeaveTypeViewModel)
         {
+            if (editLeaveTypeViewModel == null)
+            {
+                return NotFound();
+            }
+
             if (id != editLeaveTypeViewModel.Id)
             {
                 return NotFound();
@@ -138,6 +123,7 @@ namespace LeaveManagement.Controllers
 
             bool isExists = await _context.LeaveTypes.AnyAsync(q => q.Name.ToLower().Equals(editLeaveTypeViewModel.Name.ToLower())
              && q.Id != editLeaveTypeViewModel.Id);
+
             if (isExists)
             {
                 ModelState.AddModelError("Name", "A leave type with the same name already exists.");
@@ -147,17 +133,12 @@ namespace LeaveManagement.Controllers
             {
                 try
                 {
-                    var leaveType = await _context.LeaveTypes.FindAsync(id);
-                    if (leaveType == null)
+                    bool result = await _leaveTypeService.Edit(id, editLeaveTypeViewModel);
+                    if (!result)
                     {
                         return NotFound();
                     }
-
-                    leaveType.Name = editLeaveTypeViewModel.Name;
-                    leaveType.NumberOfDays = editLeaveTypeViewModel.NumberOfDays;
-
-                    _context.Update(leaveType);
-                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -170,7 +151,6 @@ namespace LeaveManagement.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(editLeaveTypeViewModel);
         }
@@ -205,13 +185,7 @@ namespace LeaveManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var leaveType = await _context.LeaveTypes.FindAsync(id);
-            if (leaveType != null)
-            {
-                _context.LeaveTypes.Remove(leaveType);
-            }
-
-            await _context.SaveChangesAsync();
+            await _leaveTypeService.Remove(id);
             return RedirectToAction(nameof(Index));
         }
 
