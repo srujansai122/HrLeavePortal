@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LeaveManagement.Data;
+using LeaveManagement.Models.LeaveTypes;
 
 namespace LeaveManagement.Controllers
 {
@@ -21,7 +22,16 @@ namespace LeaveManagement.Controllers
         // GET: LeaveTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.LeaveTypes.ToListAsync());
+            var leaveTypes = await _context.LeaveTypes
+                .Select(q => new Models.LeaveTypes.LeaveTypeViewModel
+                {
+                    Id = q.Id,
+                    Name = q.Name,
+                    NumberOfDays = q.NumberOfDays
+                }).ToListAsync();
+            return View(
+                leaveTypes
+    );
         }
 
         // GET: LeaveTypes/Details/5
@@ -39,7 +49,14 @@ namespace LeaveManagement.Controllers
                 return NotFound();
             }
 
-            return View(leaveType);
+            var model = new LeaveTypeViewModel
+            {
+                Id = leaveType.Id,
+                Name = leaveType.Name,
+                NumberOfDays = leaveType.NumberOfDays
+            };
+
+            return View(model);
         }
 
         // GET: LeaveTypes/Create
@@ -53,15 +70,34 @@ namespace LeaveManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,NumberOfDays")] LeaveType leaveType)
+        public async Task<IActionResult> Create(CreateLeaveTypeViewModel createleaveType)
         {
+
+            if (createleaveType.Name.Contains("vacation"))
+            {
+                ModelState.AddModelError("Name", "Name cannot contain the word 'vacation'");
+            }
+
+            bool isExists = await _context.LeaveTypes.AnyAsync(q => q.Name.ToLower().Equals(createleaveType.Name.ToLower()));
+
+            if (isExists)
+            {
+                ModelState.AddModelError("Name", "A leave type with the same name already exists.");
+            }
+
             if (ModelState.IsValid)
             {
+
+                var leaveType = new LeaveType
+                {
+                    Name = createleaveType.Name,
+                    NumberOfDays = createleaveType.NumberOfDays
+                };
                 _context.Add(leaveType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(leaveType);
+            return View(createleaveType);
         }
 
         // GET: LeaveTypes/Edit/5
@@ -73,11 +109,19 @@ namespace LeaveManagement.Controllers
             }
 
             var leaveType = await _context.LeaveTypes.FindAsync(id);
+
             if (leaveType == null)
             {
                 return NotFound();
             }
-            return View(leaveType);
+
+            var model = new Models.LeaveTypes.EditLeaveTypeViewModel
+            {
+                Id = leaveType.Id,
+                Name = leaveType.Name,
+                NumberOfDays = leaveType.NumberOfDays
+            };
+            return View(model);
         }
 
         // POST: LeaveTypes/Edit/5
@@ -85,23 +129,39 @@ namespace LeaveManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,NumberOfDays")] LeaveType leaveType)
+        public async Task<IActionResult> Edit(int id, EditLeaveTypeViewModel editLeaveTypeViewModel)
         {
-            if (id != leaveType.Id)
+            if (id != editLeaveTypeViewModel.Id)
             {
                 return NotFound();
+            }
+
+            bool isExists = await _context.LeaveTypes.AnyAsync(q => q.Name.ToLower().Equals(editLeaveTypeViewModel.Name.ToLower())
+             && q.Id != editLeaveTypeViewModel.Id);
+            if (isExists)
+            {
+                ModelState.AddModelError("Name", "A leave type with the same name already exists.");
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    var leaveType = await _context.LeaveTypes.FindAsync(id);
+                    if (leaveType == null)
+                    {
+                        return NotFound();
+                    }
+
+                    leaveType.Name = editLeaveTypeViewModel.Name;
+                    leaveType.NumberOfDays = editLeaveTypeViewModel.NumberOfDays;
+
                     _context.Update(leaveType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LeaveTypeExists(leaveType.Id))
+                    if (!LeaveTypeExists(editLeaveTypeViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -112,7 +172,7 @@ namespace LeaveManagement.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(leaveType);
+            return View(editLeaveTypeViewModel);
         }
 
         // GET: LeaveTypes/Delete/5
@@ -130,7 +190,14 @@ namespace LeaveManagement.Controllers
                 return NotFound();
             }
 
-            return View(leaveType);
+            var model = new LeaveTypeViewModel
+            {
+                Id = leaveType.Id,
+                Name = leaveType.Name,
+                NumberOfDays = leaveType.NumberOfDays
+            };
+
+            return View(model);
         }
 
         // POST: LeaveTypes/Delete/5
