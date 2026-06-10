@@ -1,0 +1,47 @@
+@using LeaveManagement.Models.LeaveAllocations
+@model IEnumerable<EmployeesListViewModel>
+
+@{
+    ViewData["Title"] = "Employees List";
+}
+
+<h2 class="mb-4 text-primary">@ViewData["Title"]</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.First().FirstName)</th>
+                <th>@Html.DisplayNameFor(m => m.First().LastName)</th>
+                <th>@Html.DisplayNameFor(m => m.First().dateOfBirth)</th>
+                <th>@Html.DisplayNameFor(m => m.First().Email)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Model)
+            {
+                <tr>
+                    <td>@employee.FirstName</td>
+                    <td>@employee.LastName</td>
+                    <td>@employee.dateOfBirth.ToString("yyyy-MM-dd")</td>
+                    <td>@employee.Email</td>
+                    <td>
+                        <a asp-controller="LeaveAllocation" asp-action="Details" asp-route-userId="@employee.Id"
+                           class="btn btn-sm btn-info text-white">
+                            View Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span>No employees found.</span>
+    </div>
+}

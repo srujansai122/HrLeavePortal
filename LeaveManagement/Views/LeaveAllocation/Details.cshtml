@@ -1,0 +1,94 @@
+@using LeaveManagement.Models.LeaveAllocations
+@model EmployeeAllocationViewModel
+
+@{
+    ViewData["Title"] = "Employee Leave Allocations";
+    var isAdmin = User.IsInRole("Administrator");
+    string message = isAdmin ? "No leave allocations found for this employee" : "No Leave Allocations. Please contact Administrator";
+}
+
+
+@if (isAdmin)
+{
+    <a asp-action="Index">Back To Employees List</a>
+}
+<h2 class="mb-4 text-primary">@ViewData["Title"]</h2>
+
+<div class="card shadow-sm mb-4 border-primary">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Employee Details</h4>
+    </div>
+    <div class="card-body bg-light">
+        <dl class="row">
+            <dt class="col-sm-3 text-secondary">@Html.DisplayNameFor(m => m.FirstName)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(m => m.FirstName)</dd>
+
+            <dt class="col-sm-3 text-secondary">@Html.DisplayNameFor(m => m.LastName)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(m => m.LastName)</dd>
+
+            <dt class="col-sm-3 text-secondary">@Html.DisplayNameFor(m => m.DateOfBirth)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(m => m.DateOfBirth)</dd>
+
+            <dt class="col-sm-3 text-secondary">@Html.DisplayNameFor(m => m.Email)</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(m => m.Email)</dd>
+        </dl>
+    </div>
+</div>
+
+<h4 class="mb-3 text-success">Leave Allocations</h4>
+
+@if (isAdmin && Model.IsCompletedAllocation == false)
+{
+    <form asp-action="AllocateLeave">
+        <input type="hidden" name="employeeId" value="@Model.Id" />
+        <input type="submit" value="Allocate Leave" />
+    </form>
+}
+
+@if (Model.LeaveAllocations != null && Model.LeaveAllocations.Any())
+{
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="bg-info text-white">
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.LeaveAllocations.First().LeaveType.Name)</th>
+                <th>@Html.DisplayNameFor(m => m.LeaveAllocations.First().Period.startDate)</th>
+                <th>@Html.DisplayNameFor(m => m.LeaveAllocations.First().Period.endDate)</th>
+                <th>Available Allocation Days</th>
+                <th>Original Allocation Days</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var allocation in Model.LeaveAllocations)
+            {
+                <tr>
+                    <td class="text-primary">@allocation.LeaveType.Name</td>
+                    <td class="text-muted">@allocation.Period.startDate.ToString("yyyy-MM-dd")</td>
+                    <td class="text-muted">@allocation.Period.endDate.ToString("yyyy-MM-dd")</td>
+                    <td class="fw-bold text-success">@allocation.NumberOfDays</td>
+                    <td class="fw-bold text-danger">@allocation.LeaveType.NumberOfDays</td>
+                    <td>
+                        <a asp-controller="LeaveRequest" asp-action="Create" class="btn btn-sm btn-success">
+                            Request Leave
+                        </a>
+                        @if (isAdmin)
+                        {
+                            <a asp-controller="LeaveAllocation" asp-action="EditAllocation" asp-route-id="@allocation.Id"
+                               class="btn btn-sm btn-success">
+                                Edit Allocation
+                            </a>
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <span>@message</span>
+    </div>
+}

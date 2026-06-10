@@ -32,8 +32,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     //         }
     //     );
 
-    //     builder.Entity<UserRole<string>>().HasData(
-    //         new UserRole<string>
+    //     builder.Entity<IdentityUserRole<string>>().HasData(
+    //         new IdentityUserRole<string>
     //         {
     //             UserId = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     //             RoleId = "f2bd4794-fd58-4fbf-a4d3-88be7818419b"
@@ -42,4 +42,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     // }
 
     public DbSet<LeaveType> LeaveTypes { get; set; }
+
+    public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
+
+    public DbSet<Period> Periods { get; set; }
 }
+

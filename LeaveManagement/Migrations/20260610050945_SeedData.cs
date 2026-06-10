@@ -5,7 +5,7 @@
 namespace LeaveManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class ImplementedUserLoginAndEmailAndDataSeederMigration : Migration
+    public partial class SeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
