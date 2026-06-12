@@ -1,0 +1,91 @@
+@model LeaveManagement.Models.LeaveRequests.EmployeeLeaveRequestListViewModel
+
+@{
+    ViewData["Title"] = "Leave Requests Dashboard";
+}
+
+<h2>Leave Requests Dashboard</h2>
+
+<!-- Summary cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Total Requests</h5>
+                <p class="card-text">@Model.TotalRequests</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Approved</h5>
+                <p class="card-text">@Model.ApprovedRequests</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Pending</h5>
+                <p class="card-text">@Model.PendingRequests</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">Rejected</h5>
+                <p class="card-text">@Model.RejectedRequests</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Detailed list -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Days</th>
+            <th>Leave Type</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in Model.LeaveRequests)
+        {
+            <tr>
+                <td>@request.StartDate.ToDateTime(TimeOnly.MinValue).ToString("dd MMM yyyy")</td>
+                <td>@request.EndDate.ToDateTime(TimeOnly.MinValue).ToString("dd MMM yyyy")</td>
+                <td>@request.NumberOfDays</td>
+                <td>@request.LeaveType</td>
+                <td>
+                    @if (request.LeaveRequestStatus == "Approved")
+                    {
+                        <span class="badge bg-success">Approved</span>
+                    }
+                    else if (request.LeaveRequestStatus == "Pending")
+                    {
+                        <span class="badge bg-warning text-dark">Pending</span>
+                        <a asp-action="Review" asp-route-id="@request.Id" class="btn btn-sm btn-outline-primary ms-2">Review</a>
+
+                    }
+                    else if (request.LeaveRequestStatus == "Denied")
+                    {
+                        <span class="badge bg-danger">Rejected</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">@request.LeaveRequestStatus</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="mt-3">
+    <a asp-controller="LeaveRequest" asp-action="Create" class="btn btn-success">Request Leave</a>
+</div>

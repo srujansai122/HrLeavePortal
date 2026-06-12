@@ -46,5 +46,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
 
     public DbSet<Period> Periods { get; set; }
+
+    public DbSet<LeaveRequest> LeaveRequests { get; set; }
+
+    public DbSet<LeaveRequestStatus> LeaveRequestStatuses { get; set; }
 }
 

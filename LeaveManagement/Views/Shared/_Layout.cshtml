@@ -44,6 +44,16 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="LeaveAllocation"
                                    asp-action="Index">View Employees</a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="LeaveRequestStatus"
+                                   asp-action="Index">View Statuses</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="LeaveRequest"
+                                   asp-action="ListRequests">View Leave Requests</a>
+                            </li>
                         }
 
                         @if (User.Identity.IsAuthenticated)
@@ -52,6 +62,13 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="LeaveAllocation"
                                    asp-action="Details">View Allocations</a>
                             </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="LeaveRequest"
+                                   asp-action="Index">My Leave Requests</a>
+                            </li>
+
+
                         }
 
                     </ul>
@@ -72,6 +89,7 @@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

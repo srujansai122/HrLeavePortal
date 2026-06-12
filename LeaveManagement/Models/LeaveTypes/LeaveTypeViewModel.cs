@@ -9,6 +9,8 @@ namespace LeaveManagement.Models.LeaveTypes
 
         [Display(Name = "Maximum Number of Days")]
         public int NumberOfDays { get; set; }
+
+
     }
 
     public class CreateLeaveTypeViewModel

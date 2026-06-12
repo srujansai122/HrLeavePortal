@@ -4,14 +4,98 @@
 @{
     ViewData["Title"] = "Employee Leave Allocations";
     var isAdmin = User.IsInRole("Administrator");
+    var isEmployee = User.IsInRole("Employee");
     string message = isAdmin ? "No leave allocations found for this employee" : "No Leave Allocations. Please contact Administrator";
 }
 
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h2,
+    h4 {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    .card {
+        border-radius: 8px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+
+    dl.row dt {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    dl.row dd {
+        margin-bottom: 0.75rem;
+    }
+
+    .table {
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .table th {
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    .btn {
+        margin: 2px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        padding: 6px 12px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .alert {
+        border-radius: 6px;
+        font-size: 0.95rem;
+    }
+
+    a {
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+@if (isEmployee)
+{
+    <a asp-controller="LeaveRequest" asp-action="Index" class="btn btn-outline-primary mb-3">My Leave Requests</a>
+}
 
 @if (isAdmin)
 {
-    <a asp-action="Index">Back To Employees List</a>
+    <a asp-action="Index" class="btn btn-outline-secondary mb-3">Back To Employees List</a>
 }
+
 <h2 class="mb-4 text-primary">@ViewData["Title"]</h2>
 
 <div class="card shadow-sm mb-4 border-primary">
@@ -39,9 +123,9 @@
 
 @if (isAdmin && Model.IsCompletedAllocation == false)
 {
-    <form asp-action="AllocateLeave">
+    <form asp-action="AllocateLeave" class="mb-3">
         <input type="hidden" name="employeeId" value="@Model.Id" />
-        <input type="submit" value="Allocate Leave" />
+        <input type="submit" value="Allocate Leave" class="btn btn-primary" />
     </form>
 }
 
@@ -68,18 +152,18 @@
                     <td class="fw-bold text-success">@allocation.NumberOfDays</td>
                     <td class="fw-bold text-danger">@allocation.LeaveType.NumberOfDays</td>
                     <td>
-                        <a asp-controller="LeaveRequest" asp-action="Create" class="btn btn-sm btn-success">
+                        <a asp-controller="LeaveRequest" asp-route-leaveTypeId="@allocation.LeaveType.Id" asp-action="Create"
+                           class="btn btn-sm btn-success">
                             Request Leave
                         </a>
                         @if (isAdmin)
                         {
                             <a asp-controller="LeaveAllocation" asp-action="EditAllocation" asp-route-id="@allocation.Id"
-                               class="btn btn-sm btn-success">
+                               class="btn btn-sm btn-warning">
                                 Edit Allocation
                             </a>
                         }
                     </td>
-
                 </tr>
             }
         </tbody>

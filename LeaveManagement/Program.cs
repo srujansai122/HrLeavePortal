@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using LeaveManagement.Services.Email;
 using LeaveManagement.Services.LeaveAllocations;
 using System.Reflection;
+using LeaveManagement.Services.LeaveRequests;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -22,8 +23,18 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<ILeaveTypeService, LeaveTypesService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddScoped<ILeaveAllocationsService, LeaveAllocationsService>();
+builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();
 builder.Services.AddHttpContextAccessor();
 
+
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("AdminSupervisorOnly", policy =>
+    {
+        policy.RequireRole("Administrator", "Supervisor");
+
+    });
+});
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
 .AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();

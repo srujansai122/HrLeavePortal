@@ -1,5 +1,6 @@
 using AutoMapper;
 using LeaveManagement.Models.LeaveAllocations;
+using LeaveManagement.Models.LeaveRequests;
 using LeaveManagement.Models.LeaveTypes;
 
 namespace LeaveManagement.ProfileMapper
@@ -20,6 +21,8 @@ namespace LeaveManagement.ProfileMapper
             .ForMember(dest => dest.NumberOfDays, opt => opt.MapFrom(src => src.DaysAllocated));
 
             CreateMap<User, EmployeesListViewModel>().ReverseMap();
+
+            CreateMap<LeaveRequestCreateViewModel, LeaveRequest>();
         }
     }
 }

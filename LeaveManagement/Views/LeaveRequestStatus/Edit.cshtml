@@ -1,4 +1,4 @@
-@model LeaveManagement.Data.Period
+@model LeaveManagement.Data.LeaveRequestStatus
 
 @{
     ViewData["Title"] = "Edit";
@@ -7,7 +7,7 @@
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-header bg-warning text-dark">
-            <h4>Edit Period</h4>
+            <h4>Edit Leave Request Status</h4>
         </div>
         <div class="card-body">
             <form asp-action="Edit">
@@ -15,15 +15,9 @@
                 <input type="hidden" asp-for="Id" />
 
                 <div class="mb-3">
-                    <label asp-for="startDate" class="form-label fw-bold"></label>
-                    <input asp-for="startDate" type="date" class="form-control" />
-                    <span asp-validation-for="startDate" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="endDate" class="form-label fw-bold"></label>
-                    <input asp-for="endDate" type="date" class="form-control" />
-                    <span asp-validation-for="endDate" class="text-danger"></span>
+                    <label asp-for="Name" class="form-label fw-bold"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Save</button>

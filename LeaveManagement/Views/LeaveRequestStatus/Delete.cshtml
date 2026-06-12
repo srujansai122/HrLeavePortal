@@ -1,4 +1,4 @@
-@model LeaveManagement.Data.Period
+@model LeaveManagement.Data.LeaveRequestStatus
 
 @{
     ViewData["Title"] = "Delete";
@@ -7,7 +7,7 @@
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-header bg-danger text-white">
-            <h4>Delete Period</h4>
+            <h4>Delete Leave Request Status</h4>
         </div>
         <div class="card-body">
             <h5 class="text-danger">Are you sure you want to delete this?</h5>
@@ -15,16 +15,10 @@
 
             <dl class="row">
                 <dt class="col-sm-3 fw-bold">
-                    @Html.DisplayNameFor(model => model.startDate)
+                    @Html.DisplayNameFor(model => model.Name)
                 </dt>
                 <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.startDate)
-                </dd>
-                <dt class="col-sm-3 fw-bold">
-                    @Html.DisplayNameFor(model => model.endDate)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.endDate)
+                    @Html.DisplayFor(model => model.Name)
                 </dd>
             </dl>
 

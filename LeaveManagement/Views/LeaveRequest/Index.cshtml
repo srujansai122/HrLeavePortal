@@ -1,0 +1,100 @@
+@model IEnumerable<LeaveManagement.Models.LeaveRequests.LeaveRequestListViewModel>
+
+@{
+    ViewData["Title"] = "Leave Requests";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4>Leave Requests</h4>
+            <a asp-controller="LeaveRequest" asp-action="Create" class="btn btn-light btn-sm">+ Request Leave</a>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Days</th>
+                        <th>Leave Type</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var request in Model)
+                    {
+                        <tr>
+                            <td>@request.StartDate.ToDateTime(TimeOnly.MinValue).ToString("dd MMM yyyy")</td>
+                            <td>@request.EndDate.ToDateTime(TimeOnly.MinValue).ToString("dd MMM yyyy")</td>
+                            <td>@request.NumberOfDays</td>
+                            <td>@request.LeaveType</td>
+                            <td>
+                                @switch (request.LeaveRequestStatus)
+                                {
+                                    case "Pending":
+                                        @:<span class="badge bg-warning text-dark">Pending</span>
+                                        break;
+                                    case "Approved":
+                                        @:<span class="badge bg-success">Approved</span>
+                                        break;
+                                    case "Denied":
+                                        @:<span class="badge bg-danger">Rejected</span>
+                                        break;
+                                    case "Cancelled":
+                                        @:<span class="badge bg-secondary">Cancelled</span>
+                                        break;
+                                    default:
+                                        @:<span class="badge bg-info">Unknown</span>
+                                        break;
+                                }
+                            </td>
+                            <td class="text-center">
+                                @if (request.LeaveRequestStatus.Equals("Pending"))
+                                {
+                                    <button type="button" data-id="@request.Id"
+                                            class="btn btn-danger btn-sm cancel-request">Cancel</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<form asp-controller="LeaveRequest" asp-action="Cancel" method="post" id="cancelForm">
+    <input type="hidden" name="id" id="leaveRequestId" />
+</form>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(function () {
+        $(".cancel-request").on("click", function (e) {
+        e.preventDefault();
+
+        var requestId = $(this).data("id");
+        $("#leaveRequestId").val(requestId);
+
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you really want to cancel this leave request?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, cancel it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+        $("#cancelForm").submit(); // submit hidden form
+        }
+        });
+        });
+        });
+    </script>
+}

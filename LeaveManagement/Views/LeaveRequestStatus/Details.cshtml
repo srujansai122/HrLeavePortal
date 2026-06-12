@@ -1,4 +1,4 @@
-@model LeaveManagement.Data.Period
+@model LeaveManagement.Data.LeaveRequestStatus
 
 @{
     ViewData["Title"] = "Details";
@@ -7,21 +7,15 @@
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-header bg-info text-white">
-            <h4>Period Details</h4>
+            <h4>Leave Request Status Details</h4>
         </div>
         <div class="card-body">
             <dl class="row">
                 <dt class="col-sm-3 fw-bold">
-                    @Html.DisplayNameFor(model => model.startDate)
+                    @Html.DisplayNameFor(model => model.Name)
                 </dt>
                 <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.startDate)
-                </dd>
-                <dt class="col-sm-3 fw-bold">
-                    @Html.DisplayNameFor(model => model.endDate)
-                </dt>
-                <dd class="col-sm-9">
-                    @Html.DisplayFor(model => model.endDate)
+                    @Html.DisplayFor(model => model.Name)
                 </dd>
             </dl>
 

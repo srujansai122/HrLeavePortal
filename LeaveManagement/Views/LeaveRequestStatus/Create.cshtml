@@ -1,4 +1,4 @@
-@model LeaveManagement.Data.Period
+@model LeaveManagement.Data.LeaveRequestStatus
 
 @{
     ViewData["Title"] = "Create";
@@ -7,22 +7,16 @@
 <div class="container mt-4">
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
-            <h4>Create Period</h4>
+            <h4>Create Leave Request Status</h4>
         </div>
         <div class="card-body">
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                 <div class="mb-3">
-                    <label asp-for="startDate" class="form-label fw-bold"></label>
-                    <input asp-for="startDate" type="date" class="form-control" />
-                    <span asp-validation-for="startDate" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="endDate" class="form-label fw-bold"></label>
-                    <input asp-for="endDate" type="date" class="form-control" />
-                    <span asp-validation-for="endDate" class="text-danger"></span>
+                    <label asp-for="Name" class="form-label fw-bold"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
 
                 <button type="submit" class="btn btn-success">Create</button>
