@@ -225,6 +225,4 @@ public class LeaveRequestService : ILeaveRequestService
         await _context.SaveChangesAsync();
         return true;
     }
-
-
 }
